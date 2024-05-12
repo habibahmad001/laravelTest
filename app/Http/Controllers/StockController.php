@@ -17,7 +17,8 @@ class StockController extends Controller
             $stockData    = Stock::orderBy('id', 'DESC')->get();
             $data['stockData']  = $stockData;
 
-            flash()->success('Operation completed successfully.');
+//            toastr()->success('Data has been saved successfully!');
+//            toastr()->error('An error has occurred please try again later.');
             return view('index',$data);
         } catch (Exception $e) {
             dd($e->getMessage());
