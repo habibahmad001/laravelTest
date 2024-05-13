@@ -77,13 +77,21 @@ class StockController extends Controller
             $record->stock = $request->stock;
 
             if($record->save()) {
+                $data["stockData"] = Stock::orderBy("id", "DESC")->get();
+                $html = view('inc/inc_stocktable')->with($data)->render();
                 return response()->json([
                     'status' => 'success',
-                    'code'   => '200',
+                    'code'   => 200,
+                    'html'   => $html,
                     'msg'    => 'Stock has been created successfully!'
                 ]);
             }
         } catch (Exception $e) {
+            return response()->json([
+                'status' => 'Failed',
+                'code'   => 500,
+                'msg'    => 'Server side error!'
+            ]);
             dd($e->getMessage());
         }
     }

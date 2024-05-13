@@ -7,9 +7,14 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="./slick/slick.css?v2022">
   <link rel="stylesheet" type="text/css" href="./slick/slick-theme.css?v2022">
-{{--  <link rel="stylesheet" type="text/css" href="./css/main.css?v2022">--}}
+  <link rel="stylesheet" type="text/css" href="./css/main.css?v2022">
+  <link rel="stylesheet" type="text/css" href="./css/dataTables.dataTables.css?v2022">
 </head>
 <body>
+<div class="spineroverlay" style="display: none;">
+    <div class="loader"></div>
+</div>
+
 
 <header id="header">
     <section>
@@ -63,6 +68,14 @@
             </div>
         </form>
     </section>
+
+    <section>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 populatedata">
+                @include("inc/inc_stocktable")
+            </div>
+        </div>
+    </section>
 </div>
 
 
@@ -76,6 +89,7 @@
       var csrf_token = "<?php echo csrf_token() ?>";
   </script>
   <script src="./js/inventory.js?v2022"></script>
+  <script src="./js/dataTables.js"></script>
 
 </body>
 </html>

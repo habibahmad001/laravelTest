@@ -1,4 +1,31 @@
 $(document).ready(function(){
+    // $('#stockdata thead tr').clone(true).appendTo('#stockdata');
+    // $('#stockdata thead tr:eq(1) th').each(function(i) {
+    //     var title = $(this).text();
+    //     $(this).html('<input type="text" placeholder="Search..." />');
+    //
+    //     $('input', this).on('keyup change', function() {
+    //         if (table.column(i).search() !== this.value) {
+    //             table
+    //                 .column(i)
+    //                 .search(this.value)
+    //                 .draw();
+    //         }
+    //     });
+    // });
+
+    // DataTable
+    var table = $('#stockdata').DataTable({
+        orderCellsTop: true,
+        fixedHeader: true,
+        "order": [],
+        "pageLength": 50,
+        "columnDefs": [{
+            "targets": 'no-sort',
+            "orderable": false,
+        }],
+    });
+
     $("#submit_btn").click(function() {
         var name = $("#name").val();
         var qty = $("#qty").val();
@@ -38,6 +65,7 @@ $(document).ready(function(){
                     xhr: function () {
                         var xhr = new window.XMLHttpRequest();
                         xhr.upload.addEventListener("progress", function (evt) {
+                            $(".spineroverlay").show();
                             if (evt.lengthComputable) {
                                 var percentComplete = (evt.loaded / evt.total) * 100;
                                 $('#progress').html('Upload Progress: ' + percentComplete + '%');
@@ -46,21 +74,33 @@ $(document).ready(function(){
                         return xhr;
                     },
                     success: function (response) {
-                        console.log(response);
+                        $(".spineroverlay").hide();
                         if(response.code == 200) {
                             Swal.fire({
                                 title: response.status + "!",
                                 text: response.msg,
-                                icon: "success"
+                                icon: "success",
+                                showCancelButton: true,
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "OK!"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    $(".populatedata").html(response.html);
+                                }
                             });
                         }
-                        Swal.fire({
-                            title: "failed!",
-                            text: "Ops operation is failed!",
-                            icon: "error"
-                        });
+
+                        if(response.code == 500) {
+                            Swal.fire({
+                                title: "failed!",
+                                text: "Ops operation is failed!",
+                                icon: "error"
+                            });
+                        }
                     },
                     error: function () {
+                        $(".spineroverlay").hide();
                         $('#response').html('An error occurred during upload');
                     }
                 });
