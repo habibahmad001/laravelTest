@@ -4,16 +4,20 @@ $(document).ready(function(){
         var qty = $("#qty").val();
         var stock = $("#stock").val();
         var price = $("#price").val();
+        // var fileInput = $("#logo")[0]; // Get the DOM element from jQuery object
+        // var file = fileInput.files[0];
         var formData = new FormData();
         formData.append('name', name);
         formData.append('qty', qty);
         formData.append('stock', stock);
         formData.append('price', price);
+        // formData.append('file', file);
         formData.append('_token', csrf_token);
 
         // formData.forEach(function(value, key) {
         //     console.log(key + ": " + value);
         // });
+
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -42,6 +46,7 @@ $(document).ready(function(){
                         return xhr;
                     },
                     success: function (response) {
+                        console.log(response);
                         if(response.code == 200) {
                             Swal.fire({
                                 title: response.status + "!",

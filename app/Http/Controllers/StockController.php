@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Stock;
+use Illuminate\Support\Facades\Storage;
 
 class StockController extends Controller
 {
@@ -41,6 +42,32 @@ class StockController extends Controller
             );
 
             $this->validate($request, $rules,$messsages);
+
+
+//            $file = $request->file('file');
+//            $fileName = $file->getClientOriginalName();
+//
+//            /*********** Check File Type **********/
+//            $fileExtension = $file->getClientOriginalExtension();
+////            $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+//            $allowedExtensions = ['pdf', 'png', 'jpg', 'jpeg'];
+//            if (!in_array(strtolower($fileExtension), $allowedExtensions)) {
+//                return response()->json(['status' => "notproceed", 'message' => 'File type should PDF.']);
+//            }
+//            /*********** Check File Type **********/
+//
+//            // Check if the file already exists
+//            $counter = 1;
+//            $originalFileName = $fileName;
+//            $path = 'public/' . date("Y").'/'.date("m").'/creditcard/invoice';
+//            $filePath = $path . '/' . $fileName;
+//
+//            while (Storage::exists($filePath)) {
+//                $fileName = pathinfo($originalFileName, PATHINFO_FILENAME) . " ($counter)." . pathinfo($originalFileName, PATHINFO_EXTENSION);
+//                $filePath = $path . '/' . $fileName;
+//                $counter++;
+//            }
+//            $request->file->storeAs($path, $fileName);
 
             $record = new Stock();
 

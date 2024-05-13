@@ -24,6 +24,12 @@
     <section>
         <form name="frm" id="frm" action="/" method="post">
             <div class="row">
+{{--                <div class="form-group col-sm-12 col-md-6 col-lg-6">--}}
+{{--                    <label>Product Name</label>--}}
+{{--                    <p>--}}
+{{--                        <input type="file" class="form-control" name="logo" id="logo" />--}}
+{{--                    </p>--}}
+{{--                </div>--}}
                 <div class="form-group col-sm-12 col-md-6 col-lg-6">
                     <label>Product Name</label>
                     <p>
