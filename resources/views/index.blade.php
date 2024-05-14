@@ -28,37 +28,37 @@
     </section>
 </header>
 <div class="container">
-    <section>
+    <section class="card">
         <form name="frm" id="frm" action="/" method="post">
-            <div class="row card p1">
+            <div class="row p1">
 {{--                <div class="form-group col-sm-12 col-md-6 col-lg-6">--}}
 {{--                    <label>Product Name</label>--}}
 {{--                    <p>--}}
 {{--                        <input type="file" class="form-control" name="logo" id="logo" />--}}
 {{--                    </p>--}}
 {{--                </div>--}}
-                <div class="form-group col-sm-12 col-md-12 col-lg-12">
+                <div class="form-group col-sm-12 col-md-6 col-lg-6">
                     <label>Product Name</label>
                     <p>
                         <input type="text" class="form-control" name="name" id="name" placeholder="i.e shoes" value="" required />
                     </p>
                 </div>
 
-                <div class="form-group  col-sm-12 col-md-12 col-lg-12">
+                <div class="form-group  col-sm-12 col-md-6 col-lg-6">
                     <label>Product Quantity</label>
                     <p>
                         <input type="text" class="form-control" name="qty" id="qty" placeholder="i.e 10" value="" required />
                     </p>
                 </div>
 
-                <div class="form-group  col-sm-12 col-md-12 col-lg-12">
+                <div class="form-group  col-sm-12 col-md-6 col-lg-6">
                     <label>Product in stock</label>
                     <p>
                         <input type="text" class="form-control" name="stock" id="stock" placeholder="i.e 50" value="" required />
                     </p>
                 </div>
 
-                <div class="form-group  col-sm-12 col-md-12 col-lg-12">
+                <div class="form-group  col-sm-12 col-md-6 col-lg-6">
                     <label>Product Price per item</label>
                     <p>
                         <input type="text" class="form-control" name="price" id="price" placeholder="i.e 600" value="" required />
@@ -78,9 +78,15 @@
         </div>
     </section>
 
-    <section>
-        <div class="row card p1">
+    <section class="card">
+        <div class="row p1">
             <div class="editable-error-block"></div>
+            <div class="col-sm-12 col-md-8 col-lg-8"></div>
+            <div class="col-sm-12 col-md-4 col-lg-4 text-right">
+                <a class="btn btn-info" href="{!! url("/exportxml") !!}" aria-expanded="false">Export XML</a>
+                <a class="btn btn-primary" href="{!! url("/exportjson") !!}" aria-expanded="false">Export JSON</a>
+            </div>
+            <br /><br />
             <div class="col-sm-12 col-md-12 col-lg-12 populatedata">
                 @include("inc/inc_stocktable")
             </div>

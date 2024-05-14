@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Stock;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 
 class StockController extends Controller
 {
@@ -17,6 +18,7 @@ class StockController extends Controller
 
             $stockData    = Stock::orderBy('created_at', 'DESC')->get();
             $data['stockData']  = $stockData;
+            $data['TotalValueNumber']  = Stock::TotalValueNumber();
 
 //            toastr()->success('Data has been saved successfully!');
 //            toastr()->error('An error has occurred please try again later.');
@@ -44,6 +46,75 @@ class StockController extends Controller
         return response()->json(['success' => true]);
     }
 
+
+    public function exportXML(Request $request)
+    {
+        $stocks = Stock::orderBy('created_at', 'DESC')->get();
+
+        // Create a new DOMDocument instance
+        $xmlDoc = new \DOMDocument('1.0', 'utf-8');
+        $xmlDoc->formatOutput = true;
+
+        // Create the root element
+        $root = $xmlDoc->createElement('tbl_stock');
+        $xmlDoc->appendChild($root);
+
+        // Loop through each stock item and create XML nodes
+        foreach ($stocks as $stock) {
+            $stockElement = $xmlDoc->createElement('stock');
+
+            // Create XML elements for each field
+            $productNameElement = $xmlDoc->createElement('Product_Name', htmlspecialchars($stock->name));
+            $quantityElement = $xmlDoc->createElement('Quantity_In_Stock', $stock->qty);
+            $priceElement = $xmlDoc->createElement('Price_Per_Item', $stock->price);
+            $datetimeElement = $xmlDoc->createElement('Datetime_submitted', $stock->created_at->format('Y-m-d H:i:s'));
+            $totalValueElement = $xmlDoc->createElement('Total_value_number', $stock->price * $stock->qty);
+
+            // Append elements to stock element
+            $stockElement->appendChild($productNameElement);
+            $stockElement->appendChild($quantityElement);
+            $stockElement->appendChild($priceElement);
+            $stockElement->appendChild($datetimeElement);
+            $stockElement->appendChild($totalValueElement);
+
+            // Append stock element to root
+            $root->appendChild($stockElement);
+        }
+
+        // Generate XML string
+        $xmlString = $xmlDoc->saveXML();
+
+        // Return as a response
+        return response($xmlString)
+            ->header('Content-Type', 'text/xml')
+            ->header('Content-Disposition', 'attachment; filename="stocks.xml"');
+    }
+
+    public function exportJSON(Request $request)
+    {
+        $stocks = Stock::orderBy('created_at', 'DESC')->get();
+
+        // Convert stock collection to array
+        $data = $stocks->map(function ($stock) {
+            return [
+                'Product Name' => $stock->name,
+                'Quantity In Stock' => $stock->qty,
+                'Price Per Item' => $stock->price,
+                'Datetime submitted' => $stock->created_at->format('Y-m-d H:i:s'),
+                'Total value number' => $stock->price * $stock->qty,
+            ];
+        });
+
+        // Convert array to JSON
+        $jsonString = $data->toJson(JSON_PRETTY_PRINT);
+
+        // Return as a response
+        return response($jsonString)
+            ->header('Content-Type', 'application/json')
+            ->header('Content-Disposition', 'attachment; filename="stocks.json"');
+    }
+
+
     public function store(Request $request)
     {
         try {
@@ -62,31 +133,6 @@ class StockController extends Controller
             $this->validate($request, $rules,$messsages);
 
 
-//            $file = $request->file('file');
-//            $fileName = $file->getClientOriginalName();
-//
-//            /*********** Check File Type **********/
-//            $fileExtension = $file->getClientOriginalExtension();
-////            $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-//            $allowedExtensions = ['pdf', 'png', 'jpg', 'jpeg'];
-//            if (!in_array(strtolower($fileExtension), $allowedExtensions)) {
-//                return response()->json(['status' => "notproceed", 'message' => 'File type should PDF.']);
-//            }
-//            /*********** Check File Type **********/
-//
-//            // Check if the file already exists
-//            $counter = 1;
-//            $originalFileName = $fileName;
-//            $path = 'public/' . date("Y").'/'.date("m").'/creditcard/invoice';
-//            $filePath = $path . '/' . $fileName;
-//
-//            while (Storage::exists($filePath)) {
-//                $fileName = pathinfo($originalFileName, PATHINFO_FILENAME) . " ($counter)." . pathinfo($originalFileName, PATHINFO_EXTENSION);
-//                $filePath = $path . '/' . $fileName;
-//                $counter++;
-//            }
-//            $request->file->storeAs($path, $fileName);
-
             $record = new Stock();
 
             $record->name = $request->name;
@@ -96,6 +142,7 @@ class StockController extends Controller
 
             if($record->save()) {
                 $data["stockData"] = Stock::orderBy("created_at", "DESC")->get();
+                $data['TotalValueNumber']  = Stock::TotalValueNumber();
                 $html = view('inc/inc_stocktable')->with($data)->render();
                 return response()->json([
                     'status' => 'success',

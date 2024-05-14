@@ -23,3 +23,5 @@ Route::resource('/',StockController::class);
 Route::any('/removeit/{id}',[StockController::class, "destroy"]);
 Route::any('/ajax-stock-store', [StockController::class, "store"]);
 Route::any('/review/modify', [StockController::class, 'reviewModify']);
+Route::any('/exportxml', [StockController::class, 'exportXML']);
+Route::any('/exportjson', [StockController::class, 'exportJSON']);
