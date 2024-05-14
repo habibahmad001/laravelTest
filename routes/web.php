@@ -20,4 +20,6 @@ use App\Http\Controllers\StockController;
 //});
 
 Route::resource('/',StockController::class);
+Route::any('/removeit/{id}',[StockController::class, "destroy"]);
 Route::any('/ajax-stock-store', [StockController::class, "store"]);
+Route::any('/review/modify', [StockController::class, 'reviewModify']);

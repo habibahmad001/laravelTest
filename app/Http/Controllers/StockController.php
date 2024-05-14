@@ -15,7 +15,7 @@ class StockController extends Controller
             $data['page'] = "Stock - Home";
             $data['title']  = "Stock";
 
-            $stockData    = Stock::orderBy('id', 'DESC')->get();
+            $stockData    = Stock::orderBy('created_at', 'DESC')->get();
             $data['stockData']  = $stockData;
 
 //            toastr()->success('Data has been saved successfully!');
@@ -24,6 +24,24 @@ class StockController extends Controller
         } catch (Exception $e) {
             dd($e->getMessage());
         }
+    }
+
+
+    public function reviewModify(Request $request)
+    {
+
+        $contractId = $request->input('pk');
+        $field = $request->input('name');
+        $value = $request->input('value');
+
+        $obj = Stock::find($contractId);
+        if(!$obj){
+            abort(404);
+        }
+        $obj->$field = $value;
+        $obj->save();
+
+        return response()->json(['success' => true]);
     }
 
     public function store(Request $request)
@@ -77,7 +95,7 @@ class StockController extends Controller
             $record->stock = $request->stock;
 
             if($record->save()) {
-                $data["stockData"] = Stock::orderBy("id", "DESC")->get();
+                $data["stockData"] = Stock::orderBy("created_at", "DESC")->get();
                 $html = view('inc/inc_stocktable')->with($data)->render();
                 return response()->json([
                     'status' => 'success',
@@ -94,5 +112,18 @@ class StockController extends Controller
             ]);
             dd($e->getMessage());
         }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        Stock::destroy($id);
+        toastr()->success('Record has been removed successfully!');
+        return back();
     }
 }

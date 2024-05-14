@@ -24,7 +24,36 @@ $(document).ready(function(){
             "targets": 'no-sort',
             "orderable": false,
         }],
+        buttons: ['copy', 'csv', 'excel'],
     });
+
+    $('.editable').editable({
+        showbuttons: true,
+        url: '/review/modify',
+        highlight: '#FFFF80',
+        inputclass: "form-control-sm",
+        placement: "left",
+        error: function(response, newValue) {
+            var errorBlock = $('.editable-error-block'); // Storing jQuery object
+            if (errorBlock.length > 0) {
+                errorBlock.addClass('text-danger').html(response.responseJSON.errors.value[0]).show();
+            } else {
+                console.error("Error block not found in the document.");
+            }
+        },
+        // ajaxOptions: {
+        //     beforeSend: function(xhr) {
+        //         xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="csrf-token"]').attr('content'));
+        //     }
+        // }
+    });
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
 
     $("#submit_btn").click(function() {
         var name = $("#name").val();
